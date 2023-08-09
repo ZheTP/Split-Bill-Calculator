@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/transparent_background"
+    android:padding="20dp"
+    tools:context=".EqualActivity">
+
+    <LinearLayout
+        android:id="@+id/equal_outline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="20dp">
+
+        <EditText
+            android:id="@+id/total_equal_amount_edit_text"
+            style="@style/EditTotalStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/handjet"
+            android:ems="10"
+            android:hint="@string/total_amount"
+            android:inputType="numberDecimal"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/equal_result_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/transparent_white"
+            android:fontFamily="@font/handjet"
+            android:text="@string/price_result"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/equal_home_button"
+                style="@style/RoundButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home" />
+
+            <Button
+                android:id="@+id/calculate_button"
+                style="@style/RoundButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calculate" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
