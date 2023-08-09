@@ -65,13 +65,14 @@
 
         <TextView
             android:id="@+id/custom_result_text_view"
-            style="@style/TextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@color/transparent_white"
+            android:fontFamily="@font/handjet"
             android:text="@string/price_result"
-            android:textSize="20dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
             android:visibility="gone" />
 
         <LinearLayout
