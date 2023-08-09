@@ -177,13 +177,18 @@ public class CombinationActivity extends AppCompatActivity {
 
     private void handleNextButtonClick() {
         float totalAmount;
-
         try {
-            totalAmount = Float.parseFloat(totalAmountEditText.getText().toString());
-        } catch (NumberFormatException e) {
-            // Handle invalid input (e.g., non-float values)
+            totalAmount = Float.parseFloat(totalAmountEditText.getText().toString().trim());
+        } catch (NumberFormatException e){
+            // Handle invalid input
             // Show a Toast message
-            Toast.makeText(this, "Total Amount must be a number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Total Amount must not be empty.", Toast.LENGTH_SHORT).show();
+            return; // Return early to prevent further processing
+        }
+
+        if (totalAmount == 0){
+            // Show a Toast message
+            Toast.makeText(this, "Total Amount must larger than 0.", Toast.LENGTH_SHORT).show();
             return; // Return early to prevent further processing
         }
 
