@@ -94,8 +94,6 @@ public class CombinationActivity extends AppCompatActivity {
             // Create a vertical LinearLayout to hold each person's view
             LinearLayout personLayout = new LinearLayout(this, null, 0, R.style.LayoutStyle);
             personLayout.setOrientation(LinearLayout.VERTICAL);
-
-            // Set LayoutParams for the LinearLayout
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -104,11 +102,10 @@ public class CombinationActivity extends AppCompatActivity {
             float scale = getResources().getDisplayMetrics().density;
             int marginBottomInPx = (int) (marginBottomInDp * scale + 0.5f);
             layoutParams.setMargins(0, 0, 0, marginBottomInPx);
-
             personLayout.setLayoutParams(layoutParams);
 
-            Typeface typeface = ResourcesCompat.getFont(this, R.font.handjet);
 
+            Typeface typeface = ResourcesCompat.getFont(this, R.font.handjet);
             // Create a RadioGroup to hold the two radio buttons (Percentage/Ratio and Amount)
             RadioGroup radioGroup = new RadioGroup(this);
             radioGroup.setOrientation(LinearLayout.HORIZONTAL);
@@ -117,7 +114,7 @@ public class CombinationActivity extends AppCompatActivity {
                     ViewGroup.LayoutParams.WRAP_CONTENT
             ));
 
-            // Create and add the radio buttons to the RadioGroup
+            // Create the radio buttons for RadioGroup
             RadioButton percentageRadio = new RadioButton(this);
             percentageRadio.setText(getString(R.string.percentage_ratio));
             percentageRadio.setTypeface(typeface);
@@ -133,128 +130,52 @@ public class CombinationActivity extends AppCompatActivity {
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             ));
-            ;
-
-            // Create and add the TextView to the details layout
-            TextView textView = new TextView(this);
-            textView.setText("Percentage/Amount for Person " + (i + 1) + ":");
-            textView.setTypeface(typeface);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(
+            // Create the TextView for the details layout
+            EditText nameText = new EditText(this);
+            nameText.setHint("Person " + (i + 1));
+            nameText.setTextSize(20f);
+            nameText.setTypeface(typeface);
+            nameText.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     1.5f
             ));
-
-            // Create and add the EditText to the details layout
-            EditText editText = new EditText(this);
-            editText.setTypeface(typeface);
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            editText.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            // Create the EditText for the details layout
+            EditText amountText = new EditText(this);
+            amountText.setHint("Percentage/Amount of Person " + (i + 1));
+            amountText.setTypeface(typeface);
+            amountText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            amountText.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     ContextCompat.getDrawable(this, R.drawable.dollar_icon),
                     null, null, null
             );
-            editText.setLayoutParams(new LinearLayout.LayoutParams(
+            amountText.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     1.0f
             ));
 
-            // Add textBox into detailsLayout
-            detailsLayout.addView(textView);
-            detailsLayout.addView(editText);
+            // Add Views into detailsLayout
+            detailsLayout.addView(nameText);
+            detailsLayout.addView(amountText);
 
-            // Add the percentageRadio and amountRadio into RadioGroup
+            // Add percent and amount RadioButton into RadioGroup
             radioGroup.addView(percentageRadio);
             radioGroup.addView(amountRadio);
 
-            // Add the Views to the person's layout
+            // Add Views into the person's layout
             personLayout.addView(radioGroup);
             personLayout.addView(detailsLayout);
 
-            // Add the person's layout to the container layout
+            // Add the whole person's layout to the container layout
             containerLayout.addView(personLayout);
         }
 
+        // After finished for all people, set Visible
         containerLayout.setVisibility(View.VISIBLE);
     }
 
     private void handleNextButtonClick() {
-        int childCount = containerLayout.getChildCount();
-        Log.d("Debug", "childCount: " + childCount);
-        ArrayList<Integer> radioValues = new ArrayList<>();
-        ArrayList<Float> editTextValues = new ArrayList<>();
-
-        for (int i = 0; i < childCount; i++) {
-            View view = containerLayout.getChildAt(i);
-            Log.d("Debug", "view get");
-            if (view instanceof LinearLayout) {
-                LinearLayout personLayout = (LinearLayout) view;
-                Log.d("Debug", "linear layout get");
-                // Get the RadioGroup for the person
-                RadioGroup radioGroup = (RadioGroup) personLayout.getChildAt(0);
-
-                // Get the selected radio button's text
-                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-
-                if (checkedRadioButtonId == -1) {
-                    // Show a Toast message
-                    Toast.makeText(this, "One of the radio buttons must be selected", Toast.LENGTH_SHORT).show();
-                    return; // Return early to prevent further processing
-                }
-
-                RadioButton selectedRadioButton = personLayout.findViewById(checkedRadioButtonId);
-                String radioButtonText = selectedRadioButton.getText().toString().trim();
-                // Determine if the selected radio button is "Percentage/Ratio"
-                boolean isPercentage = radioButtonText.equals(getString(R.string.percentage_ratio));
-                Log.d("Debug", "Person " + i + " Radio Button Text: " + radioButtonText);
-                Log.d("Debug", "Person " + i + " Radio Button ID: " + checkedRadioButtonId);
-                Log.d("Debug", "Person " + i + " isPercentage: " + isPercentage);
-
-                // Get the EditText value for the person
-                LinearLayout detailLayout = (LinearLayout) personLayout.getChildAt(1);
-                for (int j = 0; j < detailLayout.getChildCount(); j++) {
-                    View childView = detailLayout.getChildAt(j);
-                    Log.d("Debug", "childView get");
-                    if (childView instanceof EditText) {
-                        EditText editText = (EditText) childView;
-                        Log.d("Debug", "editText get");
-                        String editTextValueStr = editText.getText().toString().trim();
-                        if (editTextValueStr.isEmpty()) {
-                            // Show a Toast message
-                            Toast.makeText(this, "Percentage/Amount must be a number.", Toast.LENGTH_SHORT).show();
-                            return; // Return early to prevent further processing
-                        }
-
-                        float editTextValue;
-                        try {
-                            editTextValue = Float.parseFloat(editTextValueStr);
-                            Log.d("Debug", "value Stored");
-                        } catch (NumberFormatException e) {
-                            // Handle invalid input (e.g., non-float values)
-                            // Show a Toast message
-                            Toast.makeText(this, "Percentage/Amount must be a number.", Toast.LENGTH_SHORT).show();
-                            return; // Return early to prevent further processing
-                        }
-
-                        // Store 1 for Percentage/Ratio, 0 for Amount
-                        if (isPercentage) {
-                            radioValues.add(1);
-                            Log.d("Debug", "radioValue add 1");
-                        } else {
-                            radioValues.add(0);
-                            Log.d("Debug", "radioValue add 0");
-                        }
-                        editTextValues.add(editTextValue);
-                        Log.d("Debug", "editTextValue: " + editTextValue);
-                    }
-                }
-            }
-        }
-
-        // Calculate and display result
-        ArrayList<Integer> percentIndex = new ArrayList<>();
-        ArrayList<Integer> valueIndex = new ArrayList<>();
-        float totalPercent = 0;
         float totalAmount;
 
         try {
@@ -266,45 +187,104 @@ public class CombinationActivity extends AppCompatActivity {
             return; // Return early to prevent further processing
         }
 
+        int childCount = containerLayout.getChildCount();
+        ArrayList<Integer> radioValues = new ArrayList<>();
+        ArrayList<String> nameList = new ArrayList<>();
+        ArrayList<Float> amountList = new ArrayList<>();
+
+        // Traverse through containerLayout (For each person)
+        for (int i = 0; i < childCount; i++) {
+            // One person detail (name, amount in percent or amount)
+            View view = containerLayout.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout personLayout = (LinearLayout) view;
+                // Get the RadioGroup for the person
+                RadioGroup radioGroup = (RadioGroup) personLayout.getChildAt(0);
+                // Get the selected radio button's text
+                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+
+                // Validate RadioButton (if not found radioButton)
+                if (checkedRadioButtonId == -1) {
+                    // Show a Toast message
+                    Toast.makeText(this, "One of the radio buttons must be selected", Toast.LENGTH_SHORT).show();
+                    return; // Return early to prevent further processing
+                }
+
+                // Validate this person is in percentage or amount value
+                RadioButton selectedRadioButton = personLayout.findViewById(checkedRadioButtonId);
+                String radioButtonText = selectedRadioButton.getText().toString().trim();
+                // Determine if the selected radio button is "Percentage/Ratio"
+                boolean isPercentage = radioButtonText.equals(getString(R.string.percentage_ratio));
+
+                // Store 1 for Percentage/Ratio, 0 for Amount
+                if (isPercentage) {
+                    radioValues.add(1);
+                } else {
+                    radioValues.add(0);
+                }
+
+                // Get the EditText value for the person
+                LinearLayout detailLayout = (LinearLayout) personLayout.getChildAt(1);
+                // Get person name
+                EditText nameText = (EditText) detailLayout.getChildAt(0);
+                String nameStr = nameText.getText().toString().trim();
+                // Validate person name
+                if (nameStr.equals("")) {
+                    nameStr = "Person " + (i + 1);
+                }
+                nameList.add(nameStr);
+
+                // Get person amount
+                EditText amountText = (EditText) detailLayout.getChildAt(1);
+                String amountStr = amountText.getText().toString().trim();
+                // Validate amount
+                try {
+                    float value = Float.parseFloat(amountStr);
+                    amountList.add(value);
+                } catch (NumberFormatException e){
+                    // Handle invalid input
+                    // Show a Toast message
+                    String toast = (isPercentage ? "Percentage" : "Amount") + " for Person " + i +
+                            " must be a number.";
+                    Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+                    return; // Return early to prevent further processing
+                }
+            }
+        }
+
+        // Calculate and display result
+        // See which person is in amount
+        ArrayList<Integer> percentIndex = new ArrayList<>();
+        ArrayList<Integer> valueIndex = new ArrayList<>();
+        float totalPercent = 0;
         for (int i = 0; i < radioValues.size(); i++) {
             if (radioValues.get(i) == 1) {
                 // isPercentage
                 percentIndex.add(i);
-                totalPercent = totalPercent + editTextValues.get(i);
+                totalPercent = totalPercent + amountList.get(i);
             } else {
                 valueIndex.add(i);
             }
         }
 
-        Log.d("Debug", "radioValues: " + radioValues.toString());
-        Log.d("Debug", "editTextValues: " + editTextValues.toString());
-        Log.d("Debug", "totalPercent: " + totalPercent);
-        Log.d("Debug", "totalAmount: " + totalAmount);
-        Log.d("Debug", "percentIndex: " + percentIndex.toString());
-        Log.d("Debug", "valueIndex: " + valueIndex.toString());
-
         // Create a result string
-        StringBuilder result = new StringBuilder();
+        String result = "";
         int personNumber;
         float amount;
-        String formattedAmount;
         // Find person is paying by amount first
         for (int i = 0; i < valueIndex.size(); i++) {
             personNumber = valueIndex.get(i);
-            amount = editTextValues.get(personNumber);
-            formattedAmount = String.format("%.2f", amount);
+            amount = amountList.get(personNumber);
             totalAmount = totalAmount - amount;
-            result.append("Person ").append(personNumber).append(" needs to pay $").append(formattedAmount).append("\n");
+            result = result + nameList.get(personNumber) + " pay for $" + String.format("%.2f", amount) + "\n";
         }
         // Find person is paying by percent
         for (int i = 0; i < percentIndex.size(); i++) {
             personNumber = percentIndex.get(i);
-            amount = (editTextValues.get(personNumber) / totalPercent) * totalAmount;
-            formattedAmount = String.format("%.2f", amount);
-            result.append("Person ").append(personNumber).append(" needs to pay $").append(formattedAmount).append("\n");
+            amount = (amountList.get(personNumber) / totalPercent) * totalAmount;
+            result = result + nameList.get(personNumber) + " pay for $" + String.format("%.2f", amount) + "\n";
         }
 
-        Log.d("Debug", "result: " + result);
         resultTextView.setText(result);
         containerLayout.setVisibility(View.GONE);
         resultTextView.setVisibility(View.VISIBLE);
