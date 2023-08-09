@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ public class CustomActivity extends AppCompatActivity {
     private LinearLayout containerLayout;
     private Button nextButton;
     private TextView resultTextView;
+    private boolean isPercentage;
     private boolean isClicked = false;
 
     @Override
@@ -100,10 +103,10 @@ public class CustomActivity extends AppCompatActivity {
         int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
         RadioButton selectedRadioButton = findViewById(checkedRadioButtonId);
 
-        if (numberOfPeople > 0 && selectedRadioButton != null) {
-            String radioButtonText = selectedRadioButton.getText().toString();
-            boolean isPercentage = radioButtonText.equals("Percentage/Ratio");
+        String radioButtonText = selectedRadioButton.getText().toString();
+        isPercentage = radioButtonText.equals("Percentage/Ratio");
 
+        if (numberOfPeople > 0 && !radioButtonText.equals("")) {
             for (int i = 0; i < numberOfPeople; i++) {
                 LinearLayout horizontalLayout = new LinearLayout(this, null, 0, R.style.LayoutStyle);
                 horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -123,10 +126,11 @@ public class CustomActivity extends AppCompatActivity {
 
                 Typeface typeface = ResourcesCompat.getFont(this, R.font.handjet);
 
-                TextView textView = new TextView(this);
-                textView.setText((isPercentage ? "Percentage" : "Amount") + " for Person " + (i + 1) + ":");
-                textView.setTypeface(typeface);
-                textView.setLayoutParams(
+                EditText nameText = new EditText(this);
+                nameText.setHint("Person " + (i + 1));
+                nameText.setTextSize(20f);
+                nameText.setTypeface(typeface);
+                nameText.setLayoutParams(
                         new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -134,14 +138,16 @@ public class CustomActivity extends AppCompatActivity {
                         )
                 );
 
-                EditText editText = new EditText(this);
-                editText.setTypeface(typeface);
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                editText.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                EditText amountText = new EditText(this);
+                amountText.setHint("Amount for person " + (i + 1));
+                amountText.setTextSize(20f);
+                amountText.setTypeface(typeface);
+                amountText.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                amountText.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         ContextCompat.getDrawable(this, R.drawable.dollar_icon),
                         null, null, null
                 );
-                editText.setLayoutParams(
+                amountText.setLayoutParams(
                         new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -149,8 +155,8 @@ public class CustomActivity extends AppCompatActivity {
                         )
                 );
 
-                horizontalLayout.addView(textView);
-                horizontalLayout.addView(editText);
+                horizontalLayout.addView(nameText);
+                horizontalLayout.addView(amountText);
                 containerLayout.addView(horizontalLayout);
             }
         }
@@ -159,69 +165,69 @@ public class CustomActivity extends AppCompatActivity {
     }
 
     private void handleNextButtonClick() {
-        int childCount = containerLayout.getChildCount();
-        ArrayList<Float> valuesList = new ArrayList<>();
-
-        // Traverse through EditText and store value
-        for (int i = 0; i < childCount; i++) {
-            View view = containerLayout.getChildAt(i);
-            if (view instanceof LinearLayout) {
-                LinearLayout horizontalLayout = (LinearLayout) view;
-
-                for (int j = 0; j < horizontalLayout.getChildCount(); j++) {
-                    View childView = horizontalLayout.getChildAt(j);
-                    if (childView instanceof EditText) {
-                        EditText editText = (EditText) childView;
-                        String valueStr = editText.getText().toString().trim();
-
-                        if (valueStr.isEmpty()){
-                            // Show a Toast message
-                            Toast.makeText(this, "Percentage/Amount must be a number.", Toast.LENGTH_SHORT).show();
-                            return; // Return early to prevent further processing
-                        }
-                        float value = 0;
-                        try {
-                            value = Float.parseFloat(valueStr);
-                        } catch (NumberFormatException e){
-                            // Handle invalid input (e.g., non-float values)
-                            // Show a Toast message
-                            Toast.makeText(this, "Percentage/Amount must be a number.", Toast.LENGTH_SHORT).show();
-                            return; // Return early to prevent further processing
-                        }
-                        valuesList.add(value);
-                    }
-                }
-            }
-        }
-
-        // Calculate and display result
-        float totalValues = 0;
-        float totalAmount = 0;
-
+        // Validate totalAmount
+        float totalAmount;
         try {
-            totalAmount = Float.parseFloat(totalAmountEditText.getText().toString());
+            totalAmount = Float.parseFloat(totalAmountEditText.getText().toString().trim());
         } catch (NumberFormatException e){
-            // Handle invalid input (e.g., non-float values)
+            // Handle invalid input
             // Show a Toast message
             Toast.makeText(this, "Total Amount must be a number.", Toast.LENGTH_SHORT).show();
             return; // Return early to prevent further processing
         }
 
-        for (int i = 0; i < valuesList.size(); i++){
-            totalValues = totalValues + valuesList.get(i);
+        int childCount = containerLayout.getChildCount();
+        ArrayList<String> nameList = new ArrayList<>();
+        ArrayList<Float> amountList = new ArrayList<>();
+
+        // Traverse through EditText and store name and amount
+        for (int i = 0; i < childCount; i++) {
+            View view = containerLayout.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout horizontalLayout = (LinearLayout) view;
+
+                // Get person name
+                EditText nameText = (EditText) horizontalLayout.getChildAt(0);
+                String nameStr = nameText.getText().toString().trim();
+
+                // Validate person name
+                if (nameStr.equals("")) {
+                    nameStr = "Person " + (i + 1);
+                }
+
+                nameList.add(nameStr);
+
+                // Get person amount
+                EditText amountText = (EditText) horizontalLayout.getChildAt(1);
+                String amountStr = amountText.getText().toString().trim();
+
+                // Validate amount
+                try {
+                    float value = Float.parseFloat(amountStr);
+                    amountList.add(value);
+                } catch (NumberFormatException e){
+                    // Handle invalid input
+                    // Show a Toast message
+                    String toast = (isPercentage ? "Percentage" : "Amount") + " must be a number.";
+                    Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+                    return; // Return early to prevent further processing
+                }
+            }
+        }
+
+        // Calculate and display result
+        // Calculate sum
+        float totalValues = 0;
+        for (int i = 0; i < amountList.size(); i++){
+            totalValues = totalValues + amountList.get(i);
         }
 
         // Create a result string
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < valuesList.size(); i++){
-            int personNumber = i + 1;
-            float amount = (valuesList.get(i)/totalValues) * totalAmount;
-
-            // Format the amount to display with 2 decimal places
-            String formattedAmount = String.format("%.2f", amount);
-
+        String result = "";
+        for (int i = 0; i < amountList.size(); i++){
+            float amount = (amountList.get(i)/totalValues) * totalAmount;
             // Append the result for each person to the result string
-            result.append("Person ").append(personNumber).append(" needs to pay $").append(formattedAmount).append("\n");
+            result = result + nameList.get(i) + " pay for $" + String.format("%.2f", amount) + "\n";
         }
         resultTextView.setText(result);
         containerLayout.setVisibility(View.GONE);
@@ -258,5 +264,4 @@ public class CustomActivity extends AppCompatActivity {
             Toast.makeText(CustomActivity.this, "No suitable app available to share the result.", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
