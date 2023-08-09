@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RoundButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/transparent_button</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/handjet</item>
+    </style>
+    <style name="EditPeopleStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@color/transparent_white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:fontFamily">@font/handjet</item>
+        <item name="android:drawableLeft">@drawable/person_icon</item>
+    </style>
+    <style name="EditTotalStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@color/transparent_white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:fontFamily">@font/handjet</item>
+        <item name="android:drawableLeft">@drawable/money_icon</item>
+    </style>
+    <style name="EditAmountStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:fontFamily">@font/handjet</item>
+        <item name="android:drawableLeft">@drawable/dollar_icon</item>
+    </style>
+    <style name="RadioGroupStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:background">@color/transparent_white</item>
+        <item name="android:fontFamily">@font/handjet</item>
+    </style>
+    <style name="TextStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/handjet</item>
+    </style>
+    <style name="LayoutStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/transparent_white</item>
+        <item name="android:fontFamily">@font/handjet</item>
+    </style>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Individual Assignment</string>
+    <string name="total_amount">Please enter the total amount</string>
+    <string name="next">Next</string>
+    <string name="amount">Amount</string>
+    <string name="percentage_ratio">Percentage/Ratio</string>
+    <string name="price_result">Price Result</string>
+    <string name="numberOfPeople">Please enter number of people.</string>
+</resources>
