@@ -172,7 +172,13 @@ public class CustomActivity extends AppCompatActivity {
         } catch (NumberFormatException e){
             // Handle invalid input
             // Show a Toast message
-            Toast.makeText(this, "Total Amount must be a number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Total Amount must not be empty.", Toast.LENGTH_SHORT).show();
+            return; // Return early to prevent further processing
+        }
+
+        if (totalAmount == 0){
+            // Show a Toast message
+            Toast.makeText(this, "Total Amount must larger than 0.", Toast.LENGTH_SHORT).show();
             return; // Return early to prevent further processing
         }
 

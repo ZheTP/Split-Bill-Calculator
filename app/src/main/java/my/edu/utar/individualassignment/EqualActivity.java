@@ -34,15 +34,22 @@ public class EqualActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Calculate and display result
-                float totalAmount = 0;
+                float totalAmount;
                 try {
                     totalAmount = Float.parseFloat(totalAmountEditText.getText().toString());
                 } catch (NumberFormatException e){
                     // Handle invalid input (e.g., non-float values)
                     // Show a Toast message
-                    Toast.makeText(EqualActivity.this, "Total Amount must be a number.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EqualActivity.this, "Total Amount must not be empty.", Toast.LENGTH_SHORT).show();
                     return; // Return early to prevent further processing
                 }
+
+                if (totalAmount == 0){
+                    // Show a Toast message
+                    Toast.makeText(EqualActivity.this, "Total Amount must larger than 0.", Toast.LENGTH_SHORT).show();
+                    return; // Return early to prevent further processing
+                }
+
                 float result = totalAmount / MainActivity.numberOfPeople;
                 resultTextView.setText(String.format("Each person need to pay $%.2f", result));
                 resultTextView.setTextSize(30);
