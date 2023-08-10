@@ -165,6 +165,14 @@ public class CustomActivity extends AppCompatActivity {
     }
 
     private void handleNextButtonClick() {
+        int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+        // Validate RadioButton (if not found radioButton)
+        if (checkedRadioButtonId == -1) {
+            // Show a Toast message
+            Toast.makeText(this, "One of the radio buttons must be selected", Toast.LENGTH_SHORT).show();
+            return; // Return early to prevent further processing
+        }
+
         // Validate totalAmount
         float totalAmount;
         try {
