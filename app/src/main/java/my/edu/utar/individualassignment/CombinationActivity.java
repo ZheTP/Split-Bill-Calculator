@@ -249,7 +249,7 @@ public class CombinationActivity extends AppCompatActivity {
                 } catch (NumberFormatException e){
                     // Handle invalid input
                     // Show a Toast message
-                    String toast = (isPercentage ? "Percentage" : "Amount") + " for Person " + i +
+                    String toast = (isPercentage ? "Percentage" : "Amount") + " for Person " + (i + 1) +
                             " must be a number.";
                     Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
                     return; // Return early to prevent further processing
